@@ -18,12 +18,16 @@
 package org.openqa.selenium.safari;
 
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.CommandExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.FileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.service.DriverCommandExecutor;
+
+import java.io.IOException;
 
 /**
  * A WebDriver implementation that controls Safari using a browser extension
@@ -34,18 +38,6 @@ import org.openqa.selenium.remote.service.DriverCommandExecutor;
 public class SafariDriver extends RemoteWebDriver {
 
   private SafariDriverService service;
-
-  /**
-   * Capability to force usage of the deprecated SafariDriver extension while running
-   * on macOS Sierra.
-   *
-   * <pre>
-   *   DesiredCapabilities safariCap = DesiredCapabilities.Safari();
-   *   safariCap.setCapability(SafariDriver.USE_LEGACY_DRIVER_CAPABILITY, true);
-   *   WebDriver driver = new SafariDriver(safariCap);
-   * </pre>
-   */
-  public static final String USE_LEGACY_DRIVER_CAPABILITY = "useLegacyDriver";
 
   /**
    * Initializes a new SafariDriver} class with default {@link SafariOptions}.
@@ -86,15 +78,14 @@ public class SafariDriver extends RemoteWebDriver {
 
   private static CommandExecutor getExecutor(SafariOptions options) {
     SafariDriverService service = SafariDriverService.createDefaultService(options);
-    if (isLegacy(options) && service != null) {
+    if (! isLegacy(options) && service != null) {
       return new DriverCommandExecutor(service);
     }
     return new SafariDriverCommandExecutor(options);
   }
 
   private static boolean isLegacy(SafariOptions options) {
-    Object useLegacy = options.toCapabilities().getCapability(USE_LEGACY_DRIVER_CAPABILITY);
-    return useLegacy != null && (Boolean)useLegacy;
+    return options.getUseLegacyDriver();
   }
 
   @Override
