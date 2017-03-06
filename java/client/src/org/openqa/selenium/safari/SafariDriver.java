@@ -33,6 +33,8 @@ import org.openqa.selenium.remote.service.DriverCommandExecutor;
  */
 public class SafariDriver extends RemoteWebDriver {
 
+  private SafariDriverService service;
+
   /**
    * Capability to force usage of the deprecated SafariDriver extension while running
    * on macOS Sierra.
