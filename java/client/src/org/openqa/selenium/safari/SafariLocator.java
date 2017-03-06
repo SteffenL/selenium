@@ -18,12 +18,13 @@
 
 package org.openqa.selenium.safari;
 
-import org.openqa.selenium.os.CommandLine;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.util.logging.Logger;
+
+import org.openqa.selenium.os.ExecutableFinder;
 
 /**
  * Discovers a valid Safari installation on local system.
@@ -83,7 +84,7 @@ class SafariLocator {
   }
 
   public BrowserInstallation findFileInPath(String fileName) {
-    return retrieveValidInstallationPath(CommandLine.find(fileName));
+    return retrieveValidInstallationPath(new ExecutableFinder().find(fileName));
   }
 
   public BrowserInstallation retrieveValidInstallationPath(String launcher) {
